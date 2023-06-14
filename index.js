@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/social-network-api', {
+git .connect('mongodb://localhost/social-network-api', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
