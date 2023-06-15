@@ -1,3 +1,4 @@
+
 const router = require('express').Router();
 const { User, Thought } = require('../models');
 
@@ -32,7 +33,7 @@ router.get('/:thoughtId', async (req, res) => {
 // POST to create a new thought (push the created thought's _id to the associated user's thoughts array field)
 router.post('/', async (req, res) => {
   try {
-    const { thoughtText, username, userId } = req.body;
+    const { thoughtText, username } = req.body;
 
     // Create a new thought
     const newThought = await Thought.create({
@@ -40,14 +41,14 @@ router.post('/', async (req, res) => {
       username
     });
 
-    // Find the user by their id and push the new thought's _id to the thoughts array
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: userId },
+    // Find the user by their username and push the new thought's _id to the thoughts array
+    const user = await User.findOneAndUpdate(
+      { username: username },
       { $push: { thoughts: newThought._id } },
       { new: true }
     );
 
-    if (!updatedUser) {
+    if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
