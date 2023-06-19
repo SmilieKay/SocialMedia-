@@ -13,11 +13,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET a single user by its _id and populated thought and friend data
-router.get('/:userId', async (req, res) => {
+
+
+// GET a single user by their username and populated thought and friend data
+router.get('/username/:username', async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await User.findById(userId).populate('thoughts').populate('friends');
+    const { username } = req.params;
+    const user = await User.findOne({ username }).populate('thoughts').populate('friends');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -29,6 +31,8 @@ router.get('/:userId', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
 
 // POST a new user
 router.post('/', async (req, res) => {
@@ -66,12 +70,13 @@ router.put('/:userId', async (req, res) => {
   }
 });
 
-// DELETE to remove a user by its _id
-router.delete('/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
 
-    const deletedUser = await User.findByIdAndDelete(userId);
+// DELETE to remove a user by their username
+router.delete('/username/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const deletedUser = await User.findOneAndDelete({ username });
 
     if (!deletedUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -81,7 +86,7 @@ router.delete('/:userId', async (req, res) => {
     await Thought.deleteMany({ username: deletedUser.username });
 
     // Remove the user from any friend lists
-    await User.updateMany({ friends: userId }, { $pull: { friends: userId } });
+    await User.updateMany({ friends: deletedUser._id }, { $pull: { friends: deletedUser._id } });
 
     res.json(deletedUser);
   } catch (err) {
@@ -89,5 +94,8 @@ router.delete('/:userId', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+
 
 module.exports = router;
