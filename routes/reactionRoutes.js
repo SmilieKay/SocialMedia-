@@ -1,5 +1,8 @@
 const router = require('express').Router();
-const { Thought, Reaction } = require('../models');
+const { Thought } = require('../models');
+const Reaction = require('../models/Reaction');
+
+// const { Thought, Reaction } = require('../models');
 
 // POST to create a reaction stored in a single thought's reactions array field
 router.post('/:thoughtId/reactions', async (req, res) => {

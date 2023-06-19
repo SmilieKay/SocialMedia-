@@ -30,16 +30,26 @@ router.get('/:thoughtId', async (req, res) => {
   }
 });
 
-// POST to create a new thought (push the created thought's _id to the associated user's thoughts array field)
 router.post('/', async (req, res) => {
+  
   try {
     const { thoughtText, username } = req.body;
 
     // Create a new thought
-    const newThought = await Thought.create({
+    const newThought = new Thought({
       thoughtText,
       username
     });
+
+    // Validate the new thought
+    const validationError = newThought.validateSync();
+    if (validationError) {
+      const errors = Object.values(validationError.errors).map((error) => error.message);
+      return res.status(400).json({ errors });
+    }
+
+    // Save the new thought
+    await newThought.save();
 
     // Find the user by their username and push the new thought's _id to the thoughts array
     const user = await User.findOneAndUpdate(
@@ -58,6 +68,36 @@ router.post('/', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+// POST to create a new thought (push the created thought's _id to the associated user's thoughts array field)
+// router.post('/', async (req, res) => {
+//   try {
+//     const { thoughtText, username } = req.body;
+
+//     // Create a new thought
+//     const newThought = await Thought.create({
+//       thoughtText,
+//       username
+//     });
+
+//     // Find the user by their username and push the new thought's _id to the thoughts array
+//     const user = await User.findOneAndUpdate(
+//       { username: username },
+//       { $push: { thoughts: newThought._id } },
+//       { new: true }
+//     );
+
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     res.json(newThought);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json(err);
+//   }
+// });
 
 // PUT to update a thought by its _id
 router.put('/:thoughtId', async (req, res) => {
