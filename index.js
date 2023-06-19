@@ -14,6 +14,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/social-ne
 
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/users', require('./routes/friendRoutes'));
+
 app.use('/api/thoughts', require('./routes/thoughtRoutes'));
 app.use('/api/thoughts', require('./routes/reactionRoutes'));
 
