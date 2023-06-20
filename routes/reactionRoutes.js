@@ -1,19 +1,20 @@
+
+
+
 const router = require('express').Router();
 const { Thought } = require('../models');
 const Reaction = require('../models/Reaction');
-
-// const { Thought, Reaction } = require('../models');
 
 // POST to create a reaction stored in a single thought's reactions array field
 router.post('/:thoughtId/reactions', async (req, res) => {
   try {
     const { thoughtId } = req.params;
-    const { reactionBody, username } = req.body;
+    const { reactionBody, userId } = req.body;
 
     // Create a new reaction object using the Reaction subdocument schema
     const newReaction = new Reaction({
       reactionBody,
-      username
+      userId
     });
 
     // Find the thought by its id and push the newReaction into the reactions array
@@ -21,7 +22,12 @@ router.post('/:thoughtId/reactions', async (req, res) => {
       { _id: thoughtId },
       { $push: { reactions: newReaction } },
       { new: true }
-    );
+    )
+    .populate({
+      path: 'reactions',
+      populate: { path: 'userId', select: 'username' }
+    })
+    .populate('userId', 'username');
 
     if (!updatedThought) {
       return res.status(404).json({ message: 'Thought not found' });

@@ -14,8 +14,9 @@ const ThoughtSchema = new Schema({
     default: Date.now,
     get: timestamp => dateFormat(timestamp)
   },
-  username: {
-    type: String,
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   reactions: [
@@ -29,8 +30,9 @@ const ThoughtSchema = new Schema({
         required: true,
         maxlength: 280
       },
-      username: {
-        type: String,
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
       },
       createdAt: {
