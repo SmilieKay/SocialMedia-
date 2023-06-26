@@ -30,6 +30,8 @@ router.get('/:thoughtId', async (req, res) => {
   }
 });
 
+// ...
+
 router.post('/', async (req, res) => {
   
   try {
@@ -38,7 +40,7 @@ router.post('/', async (req, res) => {
     // Create a new thought
     const newThought = new Thought({
       thoughtText,
-      user: userId
+      userId
     });
 
     // Validate the new thought
@@ -51,14 +53,14 @@ router.post('/', async (req, res) => {
     // Save the new thought
     await newThought.save();
 
-    // Find the user by their username and push the new thought's _id to the thoughts array
-    const user = await User.findOneAndUpdate(
+    // Find the user by their _id and push the new thought's _id to the thoughts array
+    const foundUser = await User.findOneAndUpdate(
       { _id: userId },
       { $push: { thoughts: newThought._id } },
       { new: true }
     );
 
-    if (!user) {
+    if (!foundUser) {
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -68,6 +70,10 @@ router.post('/', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+
+
 
 // PUT to update a thought by its _id
 router.put('/:thoughtId', async (req, res) => {
