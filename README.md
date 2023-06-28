@@ -11,6 +11,7 @@ The main focus of this project was to create a Social Network API that uses Mong
 
 - [Pictures](#pictures)
 - [Usage](#usage)
+- [Video](#video)
 - [Questions](#questions)
 
 
@@ -50,7 +51,8 @@ This will start the server on http://localhost:3001
 2. Set the HTTP method (GET, POST, PUT, DELETE) and enter the URL of the endpoint you want to test. Use the appropriate endpoints provided by the  API, such as http://localhost:3001/thoughts for GETting all thoughts
 3. Set any required headers or request body parameters based on the API's documentation. Click the "Send" button to send the request.
    
-
+## Video
+To see some of what it can do please [Click Here](https://drive.google.com/file/d/1lScOwCHkkuzkX_9sWAnWHxGIJ5Y7IluC/view?usp=sharing)
 
 ## Questions
 
